@@ -214,6 +214,23 @@ with st.sidebar:
     st.markdown("---")
     top_k = st.slider("Chunks to retrieve (Top-K)", min_value=3, max_value=10, value=5)
 
+    st.markdown("---")
+    st.caption("⚠️ Documents accumulate in the index across sessions. Reset before starting a fresh demo or switching topics.")
+    if st.button("🗑️ Reset Document Index", use_container_width=True):
+        if pinecone_api_key:
+            with st.spinner("Clearing index..."):
+                pc = get_pinecone_client(pinecone_api_key)
+                index = get_or_create_index(pc)
+                clear_index(index)
+            st.session_state.documents_processed = False
+            st.session_state.processed_doc_names = []
+            st.session_state.chat_history = []
+            st.success("Index cleared.")
+            time.sleep(0.8)
+            st.rerun()
+        else:
+            st.warning("Enter your Pinecone API key first.")
+
 # ----------------------------------------------------------------------
 # HEADER
 # ----------------------------------------------------------------------
