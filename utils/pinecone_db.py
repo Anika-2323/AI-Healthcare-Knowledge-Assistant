@@ -76,5 +76,18 @@ def query_top_k(index, query_vector: list[float], k: int = 5) -> list[dict]:
 
 
 def clear_index(index):
-    """Wipes all vectors — used by the 'Clear Chat / Reset Documents' action."""
-    index.delete(delete_all=True)
+    """
+    Wipes all vectors — used by the 'Reset Document Index' action.
+
+    On Pinecone serverless, delete(delete_all=True) throws a 404
+    NotFoundError if the index's default namespace doesn't exist yet
+    (i.e. the index is already empty). That's not a real failure from
+    the user's point of view, so we swallow it.
+    """
+    try:
+        index.delete(delete_all=True)
+    except Exception as e:
+        if "404" in str(e) or "NotFoundError" in type(e).__name__ or "not found" in str(e).lower():
+            pass  # index was already empty — nothing to clear
+        else:
+            raise
