@@ -1,4 +1,11 @@
+# Ignore local Streamlit secrets
+.streamlit/secrets.toml
+
+# Ignore virtual environments
 venv/
-.env
+.venv/
+
+# Ignore uploaded medical documents and system files
+data/uploaded_pdfs/
 __pycache__/
 *.pyc

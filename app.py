@@ -189,26 +189,27 @@ if "processed_doc_names" not in st.session_state:
 # ----------------------------------------------------------------------
 with st.sidebar:
     st.markdown("### ⚙️ Configuration")
-    pinecone_api_key = st.text_input("Pinecone API Key", type="password")
-    groq_api_key = st.text_input("Groq API Key", type="password")
-    top_k = st.slider("Chunks to retrieve (Top-K)", min_value=3, max_value=10, value=5)
-
-    st.markdown("---")
-    status_html = (
-        '<span class="mg-status-ready">● Documents indexed</span>'
-        if st.session_state.documents_processed
-        else '<span class="mg-status-empty">○ No documents indexed yet</span>'
+    
+    # Check if keys exist in environment/secrets first, otherwise default to empty string
+    default_pinecone = st.secrets.get("PINECONE_API_KEY", "")
+    default_groq = st.secrets.get("GROQ_API_KEY", "")
+    
+    # If secrets are missing, let the user input them manually
+    pinecone_api_key = st.text_input(
+        "Pinecone API Key", 
+        value=default_pinecone, 
+        type="password",
+        disabled=bool(default_pinecone)
     )
-    st.markdown(status_html, unsafe_allow_html=True)
-
-    if st.session_state.processed_doc_names:
-        for name in st.session_state.processed_doc_names:
-            st.markdown(f'<span class="mg-source">{name}</span>', unsafe_allow_html=True)
-
-    st.markdown("---")
-    if st.button("🗑️ Clear Chat History"):
-        st.session_state.chat_history = []
-        st.rerun()
+    groq_api_key = st.text_input(
+        "Groq API Key", 
+        value=default_groq, 
+        type="password",
+        disabled=bool(default_groq)
+    )
+    
+    if default_pinecone and default_groq:
+        st.caption("🔒 Using administrator API keys.")
 
 # ----------------------------------------------------------------------
 # HEADER
