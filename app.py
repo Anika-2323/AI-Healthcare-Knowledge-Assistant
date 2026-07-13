@@ -211,6 +211,9 @@ with st.sidebar:
     if default_pinecone and default_groq:
         st.caption("🔒 Using administrator API keys.")
 
+    st.markdown("---")
+    top_k = st.slider("Chunks to retrieve (Top-K)", min_value=3, max_value=10, value=5)
+
 # ----------------------------------------------------------------------
 # HEADER
 # ----------------------------------------------------------------------
