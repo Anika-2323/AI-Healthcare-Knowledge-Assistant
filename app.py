@@ -159,6 +159,18 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; color: var(--ink)
 /* Status pill */
 .mg-status-ready { color: #1a7a3c; font-weight: 500; }
 .mg-status-empty { color: var(--muted); font-weight: 500; }
+
+/* Force sidebar to always stay open — prevents it from getting stuck
+   collapsed with no visible arrow to reopen it. */
+[data-testid="stSidebar"] {
+    min-width: 300px !important;
+    max-width: 300px !important;
+    transform: none !important;
+    visibility: visible !important;
+}
+[data-testid="collapsedControl"] {
+    display: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
